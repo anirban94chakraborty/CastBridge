@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <!-- Everything needed to ship one double-clickable file: the .NET runtime is bundled, so the
+         app runs on a clean Windows machine with nothing installed. -->
+    <ApplicationIcon>..\..\assets\castbridge.ico</ApplicationIcon>
+    <Product>CastBridge</Product>
+    <AssemblyName>CastBridge</AssemblyName>
+    <AssemblyTitle>CastBridge</AssemblyTitle>
+    <Description>Control Cast speakers on your local network from Windows.</Description>
+    <Version>1.0.0</Version>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="H.NotifyIcon.Wpf" Version="2.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CastBridge.Core\CastBridge.Core.csproj" />
+    <ProjectReference Include="..\CastBridge.Media\CastBridge.Media.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Both embedded: the PNG is what the tray icon decodes, the ICO is what the executable and
+         the Desktop shortcut use. WPF cannot open the ICO with BitmapImage at all. -->
+    <Resource Include="..\..\assets\castbridge.png" Link="assets\castbridge.png" />
+    <Resource Include="..\..\assets\castbridge.ico" Link="assets\castbridge.ico" />
+  </ItemGroup>
+
+</Project>

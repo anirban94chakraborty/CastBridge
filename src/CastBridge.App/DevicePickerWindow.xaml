@@ -1,0 +1,48 @@
+<Window x:Class="CastBridge.App.DevicePickerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:CastBridge.App.ViewModels"
+        Title="Choose a speaker" Height="300" Width="340"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        Topmost="True"
+        Background="{StaticResource Window.Background}"
+        TextElement.Foreground="{StaticResource Text.Primary}">
+
+    <Grid Margin="14">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Speakers and groups" FontWeight="SemiBold" Margin="0,0,0,10" />
+
+        <ListBox Grid.Row="1" ItemsSource="{Binding Devices}"
+                 SelectedItem="{Binding Selected}"
+                 MouseDoubleClick="OnPick">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Padding" Value="8,7" />
+                    <Setter Property="Cursor" Value="Hand" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="{x:Type vm:DeviceViewModel}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                            <TextBlock Text=" • " Style="{StaticResource Muted}" />
+                            <TextBlock Text="{Binding Kind}" Style="{StaticResource Muted}" FontSize="11" />
+                        </StackPanel>
+                        <TextBlock Text="{Binding Address}" Style="{StaticResource Muted}" FontSize="10" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <TextBlock Grid.Row="2" Text="Double-click to control. Groups move all their speakers together."
+                   Style="{StaticResource Muted}" FontSize="10" TextWrapping="Wrap" Margin="0,10,0,0" />
+    </Grid>
+</Window>

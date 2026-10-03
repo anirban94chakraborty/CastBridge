@@ -1,0 +1,73 @@
+<Window x:Class="CastBridge.App.TrayPopupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="CastBridge"
+        Width="308" Height="168"
+        WindowStyle="None" ResizeMode="NoResize"
+        AllowsTransparency="True" Background="Transparent"
+        ShowInTaskbar="False" Topmost="True"
+        TextElement.Foreground="{StaticResource Text.Primary}">
+
+    <!-- A thin margin all round leaves room for the drop shadow of the outer border. -->
+    <Border Margin="8" Padding="12,10" CornerRadius="10"
+            Background="{StaticResource Window.Background}"
+            BorderBrush="{StaticResource Border.Subtle}" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="12" ShadowDepth="3" Opacity="0.45" Color="Black" />
+        </Border.Effect>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <TextBlock Text="{Binding Target.Name}" FontSize="13" FontWeight="SemiBold"
+                           TextTrimming="CharacterEllipsis" MaxWidth="200" HorizontalAlignment="Left" />
+                <TextBlock HorizontalAlignment="Right" FontWeight="SemiBold" FontSize="13"
+                           Text="{Binding Target.Volume, StringFormat={}{0}%}" />
+            </Grid>
+
+            <Slider Grid.Row="1" Margin="0,10,0,0" Height="24"
+                    Minimum="0" Maximum="100" TickFrequency="5" IsSnapToTickEnabled="True"
+                    Value="{Binding Target.Volume, Mode=TwoWay}"
+                    ValueChanged="OnVolumeChanged" />
+
+            <Grid Grid.Row="2" Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Mute" Padding="8,5" FontSize="11"
+                        Click="OnToggleMute" ToolTip="Mute or unmute" />
+                <Button Grid.Column="1" Content="{Binding Target.PlayPauseGlyph}" Padding="8,5" FontSize="11"
+                        Click="OnPlayPause" ToolTip="Play or pause" Margin="5,0,0,0"
+                        IsEnabled="{Binding Target.CanControlTransport}" />
+                <Button Grid.Column="2" Content="■" Padding="8,5" FontSize="11"
+                        Click="OnStop" ToolTip="Stop playback" Margin="5,0,0,0"
+                        IsEnabled="{Binding Target.CanControlTransport}" />
+                <Button Grid.Column="3" Content="Open" Padding="8,5" FontSize="11"
+                        Click="OnOpen" ToolTip="Open the full window" Margin="5,0,0,0" />
+            </Grid>
+
+            <TextBlock Grid.Row="3" Margin="0,10,0,0" FontSize="11" TextTrimming="CharacterEllipsis"
+                       VerticalAlignment="Bottom" Text="{Binding Target.NowPlayingLine}">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="{StaticResource Text.Muted}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Target.HasMedia}" Value="True">
+                                <Setter Property="Foreground" Value="{StaticResource Text.Primary}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </Grid>
+    </Border>
+</Window>

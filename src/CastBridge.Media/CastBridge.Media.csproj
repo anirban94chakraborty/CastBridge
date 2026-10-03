@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>CastBridge.Media</RootNamespace>
+  </PropertyGroup>
+
+  <!-- The media server is Kestrel: no URL ACL reservation needed, unlike HttpListener. -->
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NAudio" Version="3.1.0" />
+    <PackageReference Include="TagLibSharp" Version="2.3.0" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CastBridge.Core\CastBridge.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The probe builds its own test audio; the tests check that it is well formed and quiet. -->
+    <InternalsVisibleTo Include="CastBridge.Tests" />
+  </ItemGroup>
+
+</Project>

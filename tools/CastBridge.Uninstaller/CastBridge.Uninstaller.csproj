@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>CastBridge-Uninstall</AssemblyName>
+    <RootNamespace>CastBridge.Installer</RootNamespace>
+    <ApplicationIcon>..\..\assets\castbridge.ico</ApplicationIcon>
+    <Product>CastBridge</Product>
+    <AssemblyTitle>Uninstall CastBridge</AssemblyTitle>
+    <Description>Removes CastBridge from this computer.</Description>
+    <Company>CastBridge</Company>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <StartupObject>CastBridge.Installer.UninstallProgram</StartupObject>
+    <!-- This is the file the setup drops next to CastBridge.exe and that Add/Remove Programs runs.
+         It carries no payload of its own: the removal is driven entirely by InstallerShared, which
+         it compiles together with the setup, so the two halves cannot disagree about what to remove. -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CastBridge.Installer\Shared\InstallerShared.cs" Link="Shared\InstallerShared.cs" />
+    <Compile Include="..\CastBridge.Installer\Shared\InstallerUi.cs" Link="Shared\InstallerUi.cs" />
+  </ItemGroup>
+
+</Project>

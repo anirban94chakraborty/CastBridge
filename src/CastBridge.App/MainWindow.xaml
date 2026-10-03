@@ -1,0 +1,141 @@
+<Window x:Class="CastBridge.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:CastBridge.App.ViewModels"
+        Title="CastBridge" Height="474" Width="340"
+        MinHeight="420" MinWidth="320"
+        ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource Window.Background}"
+        ShowInTaskbar="False"
+        Topmost="True"
+        TextElement.Foreground="{StaticResource Text.Primary}">
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Which speaker group -->
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="{Binding Target.Name}" FontSize="17" FontWeight="SemiBold"
+                       TextTrimming="CharacterEllipsis" />
+            <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                <TextBlock Text="{Binding Target.Kind}" Style="{StaticResource Muted}" FontSize="11" />
+                <TextBlock Text=" • " Style="{StaticResource Muted}" FontSize="11" />
+                <TextBlock Text="{Binding Target.Address}" Style="{StaticResource Muted}" FontSize="11" />
+                <TextBlock Text=" • " Style="{StaticResource Muted}" FontSize="11" />
+                <TextBlock Text="{Binding Target.Status}" Style="{StaticResource Muted}" FontSize="11" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Volume: the reason this window exists -->
+        <StackPanel Grid.Row="1" Margin="0,18,0,0">
+            <Grid>
+                <TextBlock Text="Volume" FontWeight="SemiBold" />
+                <TextBlock HorizontalAlignment="Right" Text="{Binding Target.Volume, StringFormat={}{0}%}"
+                           FontWeight="SemiBold" />
+            </Grid>
+            <Slider Minimum="0" Maximum="100" TickFrequency="5" IsSnapToTickEnabled="True"
+                    Margin="0,8,0,0" Height="26"
+                    Value="{Binding Target.Volume, Mode=TwoWay}"
+                    ValueChanged="OnVolumeChanged" />
+            <TextBlock Text="Speaker group volume — moves both speakers together"
+                       Style="{StaticResource Muted}" FontSize="10" TextWrapping="Wrap" />
+        </StackPanel>
+
+        <!-- Mute and transport. The middle button follows the player state the device reports. -->
+        <StackPanel Grid.Row="2" Margin="0,12,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Content="Mute" Click="OnToggleMute" ToolTip="Mute or unmute" />
+                <Button Grid.Column="1" Content="◀◀" Click="OnPrevious" ToolTip="Previous track" Margin="6,0,0,0"
+                        IsEnabled="{Binding Target.CanControlTransport}" />
+                <Button Grid.Column="2" Content="{Binding Target.PlayPauseGlyph}" Click="OnPlayPause"
+                        ToolTip="Play or pause" Margin="6,0,0,0"
+                        IsEnabled="{Binding Target.CanControlTransport}" />
+                <Button Grid.Column="3" Content="▶▶" Click="OnNext" ToolTip="Next track" Margin="6,0,0,0"
+                        IsEnabled="{Binding Target.CanControlTransport}" />
+                <Button Grid.Column="4" Content="■" Click="OnStop" ToolTip="Stop playback" Margin="6,0,0,0"
+                        IsEnabled="{Binding Target.CanControlTransport}" />
+            </Grid>
+            <TextBlock Text="{Binding Target.TransportNote}" Style="{StaticResource Muted}" FontSize="10"
+                       TextWrapping="Wrap" Margin="0,6,0,0"
+                       Visibility="{Binding Target.HasTransportNote, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        </StackPanel>
+
+        <!-- Now playing: whatever the speaker itself reports -->
+        <Border Grid.Row="3" Margin="0,14,0,0" Padding="12,10" CornerRadius="6" VerticalAlignment="Top"
+                Background="#FF1F232B" BorderBrush="{StaticResource Border.Subtle}" BorderThickness="1">
+            <StackPanel>
+                <TextBlock Text="NOW PLAYING" Style="{StaticResource Muted}" FontSize="9" />
+
+                <Grid Margin="0,6,0,0" Visibility="{Binding Target.HasMedia, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Artwork when the device offers it; a placeholder note glyph otherwise -->
+                    <Grid Grid.Column="0" Width="52" Height="52" VerticalAlignment="Top">
+                        <Border CornerRadius="4" Background="#FF2A2F38" BorderBrush="{StaticResource Border.Subtle}"
+                                BorderThickness="1" />
+                        <TextBlock Text="♪" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   FontSize="20" Foreground="#FF6F7A8C" />
+                        <Image Source="{Binding Target.AlbumArtUrl}" Stretch="UniformToFill" />
+                    </Grid>
+
+                    <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Top">
+                        <TextBlock Text="{Binding Target.Title}" FontSize="13" FontWeight="SemiBold"
+                                   TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding Target.Subtitle}" Style="{StaticResource Muted}" FontSize="11"
+                                   TextTrimming="CharacterEllipsis" Margin="0,2,0,0"
+                                   Visibility="{Binding Target.Subtitle, Converter={StaticResource StringNotEmptyToVisibilityConverter}}" />
+                        <StackPanel Orientation="Horizontal" Margin="0,4,0,0">
+                            <TextBlock Text="{Binding Target.PlaybackState}" FontSize="11" Foreground="{StaticResource Accent}" />
+                            <TextBlock Text="  ·  " Style="{StaticResource Muted}" FontSize="11"
+                                       Visibility="{Binding Target.HasTimeline, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                            <TextBlock Text="{Binding Target.Timeline}" Style="{StaticResource Muted}" FontSize="11"
+                                       Visibility="{Binding Target.HasTimeline, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+
+                <TextBlock Text="{Binding Target.EmptyMediaMessage}" Style="{StaticResource Muted}" FontSize="12"
+                           Margin="0,6,0,0" TextWrapping="Wrap"
+                           Visibility="{Binding Target.HasMedia, Converter={StaticResource BooleanToInverseVisibilityConverter}}" />
+
+                <ProgressBar Margin="0,8,0,0" Minimum="0" Maximum="100"
+                             Value="{Binding Target.ProgressPercent, Mode=OneWay}"
+                             Visibility="{Binding Target.HasMedia, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            </StackPanel>
+        </Border>
+
+        <!-- Whatever the device said when a command failed -->
+        <TextBlock Grid.Row="4" Text="{Binding LastError}" Foreground="#FFFF7B72" FontSize="11"
+                   TextWrapping="Wrap" Margin="0,10,0,0"
+                   Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+        <!-- Footer -->
+        <Grid Grid.Row="5" Margin="0,14,0,0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Content="Refresh" Click="OnRefresh" Padding="10,5" FontSize="11" />
+                <Button Content="Switch device" Click="OnSwitchDevice" Padding="10,5" FontSize="11" Margin="6,0,0,0" />
+            </StackPanel>
+            <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center"
+                       Text="{Binding Summary}" Style="{StaticResource Muted}" FontSize="10"
+                       MaxWidth="120" TextTrimming="CharacterEllipsis" ToolTip="{Binding Summary}" />
+        </Grid>
+    </Grid>
+</Window>

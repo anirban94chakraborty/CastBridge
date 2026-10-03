@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!-- .NET Framework 4.8 is part of every Windows release CastBridge supports (10 version 1903 and
+         later, and all of 11), so the setup executable stays a few kilobytes of code on top of the
+         CastBridge.exe it carries instead of dragging in a second copy of a runtime. -->
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>CastBridge-Setup</AssemblyName>
+    <RootNamespace>CastBridge.Installer</RootNamespace>
+    <ApplicationIcon>..\..\assets\castbridge.ico</ApplicationIcon>
+    <Product>CastBridge</Product>
+    <AssemblyTitle>CastBridge Setup</AssemblyTitle>
+    <Description>Installs CastBridge, the Cast speaker tray controller.</Description>
+    <Company>CastBridge</Company>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <StartupObject>CastBridge.Installer.Program</StartupObject>
+    <!-- Not part of CastBridge.slnx on purpose: this project embeds the published
+         dist\CastBridge.exe, so building it requires tools\publish.ps1 to have run first.
+         tools\build-installer.ps1 does that and then builds it. -->
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PayloadPath Condition="'$(PayloadPath)' == ''">$(MSBuildThisFileDirectory)..\..\dist\CastBridge.exe</PayloadPath>
+    <UninstallerPath Condition="'$(UninstallerPath)' == ''">$(MSBuildThisFileDirectory)..\..\build\uninstaller\CastBridge-Uninstall.exe</UninstallerPath>
+  </PropertyGroup>
+
+  <Target Name="FailWithoutEmbeddedFiles" BeforeTargets="PrepareForBuild">
+    <Error Condition="!Exists('$(PayloadPath)')"
+           Text="CastBridge.exe not found at '$(PayloadPath)'. Run tools\publish.ps1, or tools\build-installer.ps1 to do the lot." />
+    <Error Condition="!Exists('$(UninstallerPath)')"
+           Text="CastBridge-Uninstall.exe not found at '$(UninstallerPath)'. Run tools\build-installer.ps1, which builds it first." />
+  </Target>
+
+  <ItemGroup>
+    <!-- Both embedded, so one file can be copied to another machine and it still contains
+         everything it needs to install, and to remove, itself. -->
+    <EmbeddedResource Include="$(PayloadPath)" LogicalName="CastBridge.Payload.exe" />
+    <EmbeddedResource Include="$(UninstallerPath)" LogicalName="CastBridge.Uninstaller.exe" />
+  </ItemGroup>
+
+</Project>

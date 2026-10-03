@@ -1,0 +1,17 @@
+# Text is stored with LF and checked out as LF on every platform; the working copy here is Windows
+# only, but a public repository should not accumulate mixed line endings between contributors.
+* text=auto eol=lf
+
+# These are read by Windows tools that are happiest with CRLF.
+*.ps1 text eol=crlf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Never touched.
+*.png binary
+*.ico binary
+*.jpg binary
+*.gif binary
+*.exe binary
+*.dll binary
+*.zip binary

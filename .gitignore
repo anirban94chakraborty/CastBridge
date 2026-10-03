@@ -1,0 +1,28 @@
+# Build output. Everything here is produced by tools\publish.ps1 and tools\build-installer.ps1,
+# and the installer itself is published as a GitHub Release asset rather than committed: a 90 MB
+# binary in the history is a permanent cost and never needs to be in it.
+bin/
+obj/
+dist/
+build/
+publish/
+artifacts/
+TestResults/
+
+# Editor and tooling state
+.vs/
+.idea/
+*.user
+*.suo
+*.DotSettings.user
+tools/_apidump/
+
+# Workspace metadata, not part of the project
+.freebuff/
+
+# Logs and scratch files
+*.log
+tmp/
+tools/tmp-*
+Thumbs.db
+desktop.ini
