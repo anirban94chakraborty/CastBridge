@@ -58,7 +58,8 @@ For anyone else, there is a setup file: **`CastBridge-1.0.0-Setup.exe`**. Copy t
 another Windows machine and double click it.
 
 It is published as an asset on the repository's **Releases** page rather than committed here — a
-90 MB binary does not belong in a git history. To build it yourself, run:
+90 MB binary does not belong in a git history. The release notes, including the file's SHA256, are
+in [CHANGELOG.md](CHANGELOG.md). To build it yourself, run:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\build-installer.ps1
