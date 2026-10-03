@@ -20,6 +20,10 @@ tools/_apidump/
 # Workspace metadata, not part of the project
 .freebuff/
 
+# My own notes about the speakers on this network. Useful here, nobody else's business:
+# the addresses and device names in it are private, so it stays untracked.
+docs/hardware-findings.md
+
 # Logs and scratch files
 *.log
 tmp/
